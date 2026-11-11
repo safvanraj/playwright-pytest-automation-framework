@@ -15,7 +15,7 @@ def test_full_checkout(logged_in_page: Page):
 
 
     checkout_page = CheckoutPage(logged_in_page)
-    checkout_page.fill_information("Test_Ayan", "User_Sharma", "M5V 2T6")
+    checkout_page.fill_information("Test", "User", "M5V 2T6")
     checkout_page.finish_order()
 
     expect(checkout_page.complete_header).to_have_text("Thank you for your order!")

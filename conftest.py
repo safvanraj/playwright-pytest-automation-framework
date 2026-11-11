@@ -8,3 +8,14 @@ def logged_in_page(page: Page):
     login_page.open()
     login_page.login("standard_user","secret_sauce")
     yield page
+
+
+@pytest.fixture
+def api(playwright):
+    context = playwright.request.new_context(
+        base_url="https://restful-booker.herokuapp.com",
+        extra_http_headers ={"Accept": "application/json"},
+    )
+    yield context
+    context.dispose()
+    
