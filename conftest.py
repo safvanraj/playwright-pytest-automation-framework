@@ -18,4 +18,12 @@ def api(playwright):
     )
     yield context
     context.dispose()
-    
+
+@pytest.fixture
+def token(api):
+    response = api.post(
+        "/auth",
+        data = {"username": "admin", "password": "password123"},
+    )
+    assert response.status == 200
+    return response.json()["token"]

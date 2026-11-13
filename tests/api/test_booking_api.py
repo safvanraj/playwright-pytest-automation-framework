@@ -39,4 +39,32 @@ def test_get_created_booking(api: APIRequestContext):
     booking = response.json()
     assert booking["firstname"] == "Test"
     assert booking["lastname"] == "User"
-    assert booking["totalprice"] == 150
+    assert booking["totalprice"] == 150 
+
+def test_update_booking(api: APIRequestContext, token:str):
+    create_response = api.post("/booking", data =NEW_BOOKING)
+    booking_id = create_response.json()["bookingid"]
+
+    updated_booking = NEW_BOOKING.copy()
+    updated_booking["firstname"] = "Updated"
+
+    response = api.put(
+        f"/booking/{booking_id}",
+        data=updated_booking,
+        headers={"Cookie": f"token={token}"},
+    )
+    assert response.status == 200
+    assert response.json()["firstname"] == "Updated"
+
+def test_deleted_booking(api: APIRequestContext, token:str):
+    create_response = api.post("/booking", data= NEW_BOOKING)
+    booking_id = create_response.json()["bookingid"]
+
+    response = api.delete(
+        f"/booking/{booking_id}",
+        headers={"Cookie": f"token={token}"},
+        )
+    assert response.status == 201
+
+    get_response = api.get(f"/booking/{booking_id}")
+    assert get_response.status == 404
